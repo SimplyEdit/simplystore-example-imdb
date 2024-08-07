@@ -1,0 +1,15 @@
+{
+  "name": "simplystore-imdb-example",
+  "version": "0.1.0",
+  "description": "Example of SimplyStore using the open IMDB dataset.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/simplyedit/simplystore-imdb-example.git"
+  },
+  "author": "B.M. Peachey <ben@muze.nl>",
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/simplyedit/simplystore-imdb-example/issues"
+  },
+  "homepage": "https://github.com/simplyedit/simplystore-imdb-example#readme"
+}
