@@ -19,6 +19,9 @@ source.pipe(TsvParser())
 .on('data', (record) => {
 	count++
 	process.stdout.write('\r'+count)
+	// if (count>1000) {
+	// 	return
+	// }
 	if (record.titleType!='movie') {
 		return
 	}
@@ -29,7 +32,7 @@ source.pipe(TsvParser())
 		return
 	}
 	JSONTag.setAttribute(movie, 'id', id)
-	JSONTag.setAttribute
+	JSONTag.setAttribute(movie, 'class', 'Movie')
 
 	if (!record.primaryTitle || record.primaryTitle=='\\N') {
 		movie.title = new JSONTag.Null()
@@ -105,6 +108,6 @@ source.pipe(TsvParser())
 .on('end', () => {
 	data.genres = Object.values(data.genres)
 	console.log('writing...')
-	fs.writeFileSync(path.dirname(outputFile,serialize(data))
+	fs.writeFileSync(outputFile,serialize(data))
 	console.log('\ndone\n')
 })
