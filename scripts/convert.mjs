@@ -103,7 +103,7 @@ source.pipe(TsvParser())
 	}
 })
 .on('end', () => {
-	data.movies.genres = Object.values(data.movies.genres)
+	data.genres = Object.values(data.genres)
 	console.log('writing...')
 	fs.writeFileSync(path.dirname(outputFile,serialize(data))
 	console.log('\ndone\n')
