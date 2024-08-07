@@ -2,6 +2,9 @@
   "name": "simplystore-imdb-example",
   "version": "0.1.0",
   "description": "Example of SimplyStore using the open IMDB dataset.",
+  "scripts": {
+    "convert": "node node_modules/@muze-nl/simplystore/scripts/convert.mjs data.json data.od-jsontag"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/simplyedit/simplystore-imdb-example.git"
