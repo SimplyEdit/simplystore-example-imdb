@@ -11,5 +11,8 @@
   "bugs": {
     "url": "https://github.com/simplyedit/simplystore-imdb-example/issues"
   },
-  "homepage": "https://github.com/simplyedit/simplystore-imdb-example#readme"
+  "homepage": "https://github.com/simplyedit/simplystore-imdb-example#readme",
+  "dependencies": {
+    "@muze-nl/simplystore": "^0.6"
+  }
 }
