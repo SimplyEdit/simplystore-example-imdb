@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "description": "Example of SimplyStore using the open IMDB dataset.",
   "scripts": {
-    "convert": "node node_modules/@muze-nl/simplystore/scripts/convert.mjs data.json data.od-jsontag"
+    "convert": "node node_modules/@muze-nl/simplystore/scripts/convert.mjs data.json data.od-jsontag",
+    "start": "node server.mjs"
   },
   "repository": {
     "type": "git",
