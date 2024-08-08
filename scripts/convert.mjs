@@ -10,6 +10,11 @@ let data = {
 	genres: {}
 }
 
+let skipped = {
+	"invalid-record": [],
+	"not-movie": [],
+}
+
 let inputFile = process.argv[2]
 let outputFile = process.argv[3]
 
@@ -96,21 +101,20 @@ function convert(record) {
 source.pipe(TsvParser())
 .on('data', (record) => {
 	count++
-	process.stdout.write('\r'+count)
 	// if (count>1000) {
 	// 	return
 	// }
-	if (record.titleType!='movie') {
-    // skip
-	} else if (!record.tconst || typeof record.tconst != 'string') {
-		console.error('invalid id',record)
+	if (record.titleType !== 'movie') {
+		skipped['not-movie'].push(record)
+	} else if ( ! record.tconst || typeof record.tconst !== 'string') {
+		skipped['invalid-record'].push(record)
 	} else {
 		convert(record)
 	}
 })
 .on('end', () => {
 	data.genres = Object.values(data.genres)
-	console.log('writing...')
-	fs.writeFileSync(outputFile,serialize(data))
-	console.log('\ndone\n')
+  console.log('writing...')
+  fs.writeFileSync(outputFile,serialize(data))
+  console.log('\ndone\n')
 })
