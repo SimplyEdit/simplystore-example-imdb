@@ -1,5 +1,4 @@
 import fs from 'node:fs'
-import path from 'node:path'
 import JSONTag from '@muze-nl/jsontag'
 import serialize from '@muze-nl/od-jsontag/src/serialize.mjs'
 import tsv from '../lib/tsv-parser.js'
