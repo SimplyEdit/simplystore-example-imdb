@@ -103,6 +103,12 @@ source.pipe(TsvParser())
 	// if (count>1000) {
 	// 	return
 	// }
+
+	const skippedCount = skipped['not-movie'].length + skipped['adult'].length + skipped['invalid-record'].length
+	const message = `\rParsed: ${count}, Movies: ${data.movies.length}, Skipped: ${skippedCount} (${skipped['not-movie'].length} not a movie, ${skipped['adult'].length} adult movie, ${skipped['invalid-record'].length} invalid record)`
+
+	process.stdout.write(message)
+
 	if (record.titleType !== 'movie') {
 		skipped['not-movie'].push(record)
 	} else if (record.isAdult === '1' || record.isAdult === 1) {
