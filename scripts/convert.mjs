@@ -11,6 +11,7 @@ let data = {
 }
 
 let skipped = {
+	"adult": [],
 	"invalid-record": [],
 	"not-movie": [],
 }
@@ -39,8 +40,6 @@ function convert(record) {
 		movie.originalTitle = new String(record.originalTitle)
 	}
 	JSONTag.setType(movie.originalTitle, 'text')
-
-	movie.isAdult = record.isAdult=='1'
 
 	if (!record.startYear || record.startYear=='\\N' || isNaN(parseInt(record.startYear))) {
 		movie.startYear = new JSONTag.Null()
@@ -106,6 +105,8 @@ source.pipe(TsvParser())
 	// }
 	if (record.titleType !== 'movie') {
 		skipped['not-movie'].push(record)
+	} else if (record.isAdult === '1' || record.isAdult === 1) {
+		skipped['adult'].push(record)
 	} else if ( ! record.tconst || typeof record.tconst !== 'string') {
 		skipped['invalid-record'].push(record)
 	} else {
