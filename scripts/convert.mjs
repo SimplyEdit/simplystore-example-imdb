@@ -15,22 +15,10 @@ let inputFile = process.argv[2]
 let outputFile = process.argv[3]
 
 const source = fs.createReadStream(inputFile)
-source.pipe(TsvParser())
-.on('data', (record) => {
-	count++
-	process.stdout.write('\r'+count)
-	// if (count>1000) {
-	// 	return
-	// }
-	if (record.titleType!='movie') {
-		return
-	}
+
+function convert(record) {
 	let movie = {}
 	let id = record.tconst
-	if (!id || typeof id != 'string') {
-		console.error('invalid id',record)
-		return
-	}
 	JSONTag.setAttribute(movie, 'id', id)
 	JSONTag.setAttribute(movie, 'class', 'Movie')
 
@@ -103,6 +91,22 @@ source.pipe(TsvParser())
 		}
 	} else {
 		movie.genres = []
+	}
+}
+
+source.pipe(TsvParser())
+.on('data', (record) => {
+	count++
+	process.stdout.write('\r'+count)
+	// if (count>1000) {
+	// 	return
+	// }
+	if (record.titleType!='movie') {
+    // skip
+	} else if (!record.tconst || typeof record.tconst != 'string') {
+		console.error('invalid id',record)
+	} else {
+		convert(record)
 	}
 })
 .on('end', () => {
