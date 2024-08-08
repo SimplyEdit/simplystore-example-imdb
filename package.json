@@ -2,7 +2,8 @@
   "name": "simplystore-example-imdb",
   "description": "Example of SimplyStore using the IMDb Non-Commercial Datasets.",
   "scripts": {
-    "convert": "node scripts/convert.mjs data/titles.imdb.tsv data/data.od-jsontag",
+    "convert": "node scripts/convert.mjs data/title.basics.tsv data/data.od-jsontag",
+    "download": "node scripts/download.mjs title.basics",
     "start": "node src/server.mjs"
   },
   "repository": {
