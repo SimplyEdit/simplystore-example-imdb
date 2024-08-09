@@ -1,5 +1,4 @@
 import fs from 'node:fs'
-import path from 'node:path'
 import JSONTag from '@muze-nl/jsontag'
 import serialize from '@muze-nl/od-jsontag/src/serialize.mjs'
 import tsv from '../lib/tsv-parser.js'
@@ -11,26 +10,20 @@ let data = {
 	genres: {}
 }
 
+let skipped = {
+	"adult": [],
+	"invalid-record": [],
+	"not-movie": [],
+}
+
 let inputFile = process.argv[2]
 let outputFile = process.argv[3]
 
 const source = fs.createReadStream(inputFile)
-source.pipe(TsvParser())
-.on('data', (record) => {
-	count++
-	process.stdout.write('\r'+count)
-	// if (count>1000) {
-	// 	return
-	// }
-	if (record.titleType!='movie') {
-		return
-	}
+
+function convert(record) {
 	let movie = {}
 	let id = record.tconst
-	if (!id || typeof id != 'string') {
-		console.error('invalid id',record)
-		return
-	}
 	JSONTag.setAttribute(movie, 'id', id)
 	JSONTag.setAttribute(movie, 'class', 'Movie')
 
@@ -47,8 +40,6 @@ source.pipe(TsvParser())
 		movie.originalTitle = new String(record.originalTitle)
 	}
 	JSONTag.setType(movie.originalTitle, 'text')
-
-	movie.isAdult = record.isAdult=='1'
 
 	if (!record.startYear || record.startYear=='\\N' || isNaN(parseInt(record.startYear))) {
 		movie.startYear = new JSONTag.Null()
@@ -104,10 +95,33 @@ source.pipe(TsvParser())
 	} else {
 		movie.genres = []
 	}
+}
+
+source.pipe(TsvParser())
+.on('data', (record) => {
+	count++
+	// if (count>1000) {
+	// 	return
+	// }
+
+	const skippedCount = skipped['not-movie'].length + skipped['adult'].length + skipped['invalid-record'].length
+	const message = `\rParsed: ${count}, Movies: ${data.movies.length}, Skipped: ${skippedCount} (${skipped['not-movie'].length} not a movie, ${skipped['adult'].length} adult movie, ${skipped['invalid-record'].length} invalid record)`
+
+	process.stdout.write(message)
+
+	if (record.titleType !== 'movie') {
+		skipped['not-movie'].push(record)
+	} else if (record.isAdult === '1' || record.isAdult === 1) {
+		skipped['adult'].push(record)
+	} else if ( ! record.tconst || typeof record.tconst !== 'string') {
+		skipped['invalid-record'].push(record)
+	} else {
+		convert(record)
+	}
 })
 .on('end', () => {
 	data.genres = Object.values(data.genres)
-	console.log('writing...')
-	fs.writeFileSync(outputFile,serialize(data))
-	console.log('\ndone\n')
+	process.stdout.write(`\nWriting to ${outputFile}`)
+	fs.writeFileSync(outputFile, serialize(data))
+	process.stdout.write('\nDone.\n')
 })
