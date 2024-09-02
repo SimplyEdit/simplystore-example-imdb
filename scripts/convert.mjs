@@ -79,9 +79,12 @@ function convert(record) {
 				}
 				if (!data.genres[genre]) {
 					data.genres[genre] = {
-						name: ''+genre,
-						movies: []
+						name: ''+genre
 					}
+					Object.defineProperty(data.genres[genre], 'movies', {
+						value: [],
+						enumerable: false
+					})
 				}
 				data.genres[genre].movies.push(movie)
 				if (!movie.genres) {
